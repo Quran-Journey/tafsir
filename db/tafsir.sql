@@ -1,42 +1,39 @@
---- Some comments on the table below 
---- the quran_text table is defined in quran-simple.sql
 
-DROP TABLE IF EXISTS RootWord CASCADE;
-CREATE TABLE IF NOT EXISTS RootWord (
-    RootID INT PRIMARY KEY,
-    RootWord VARCHAR(225) NOT NULL UNIQUE
+DROP TABLE IF EXISTS Tafsir CASCADE;
+CREATE TABLE IF NOT EXISTS Tafsir (
+    tafsir_id SERIAL PRIMARY KEY,
+    content TEXT NOT NULL,
+    book TEXT NOT NULL
 );
 
-DROP TABLE IF EXISTS ArabicWord CASCADE;
-CREATE TABLE IF NOT EXISTS ArabicWord (
-    WordID INT PRIMARY KEY,
-    Word VARCHAR(255) NOT NULL,
-    RootID INT NOT NULL,
-    FOREIGN KEY (RootID)
-        REFERENCES RootWord(RootID)
+DROP TABLE IF EXISTS Mufasir CASCADE;
+CREATE TABLE IF NOT EXISTS Mufasir (
+    mufasir_id SERIAL PRIMARY KEY,
+    mufasir_name INT NOT NULL,
+    death DATETIME NOT NULL
+)
+
+DROP TABLE IF EXISTS Book CASCADE;
+CREATE TABLE IF NOT EXISTS Tafsir (
+    book_id SERIAL PRIMARY KEY,
+    author TEXT NOT NULL,
+    title TEXT NOT NULL,
+    FOREIGN KEY (author)
+        REFERENCES Mufasir(mufasir_id)
         ON DELETE CASCADE
         ON UPDATE CASCADE
-);
-DROP TABLE IF EXISTS TextToWord CASCADE;
-CREATE TABLE IF NOT EXISTS TextToWord  (
-    IndexID INT NOT NULL,
-    WordID INT NOT NULL,
-    PRIMARY KEY (IndexID, WordID),
-    FOREIGN KEY (IndexID)
-        REFERENCES quran_text("index")
+)
+
+DROP TABLE IF EXISTS MufasirTafsir CASCADE;
+CREATE TABLE IF NOT EXISTS MufasirTafsir (
+    mufasir INT,
+    tafsir INT,
+    FOREIGN KEY (mufasir)
+        REFERENCES Mufasir(mufasir_id)
         ON DELETE CASCADE
         ON UPDATE CASCADE,
-	FOREIGN KEY (WordID)
-		REFERENCES ArabicWord(WordID)
-		ON DELETE CASCADE
-		ON UPDATE CASCADE
-);
-DROP TABLE IF EXISTS RootMeaning CASCADE;
-CREATE TABLE IF NOT EXISTS RootMeaning  (
-    RootWord VARCHAR(225) PRIMARY KEY,
-    Meanings TEXT,
-    FOREIGN KEY (RootWord)
-        REFERENCES RootWord(RootWord)
+    FOREIGN KEY (tafsir)
+        REFERENCES Tafsir(tafsir_id)
         ON DELETE CASCADE
         ON UPDATE CASCADE
 );
