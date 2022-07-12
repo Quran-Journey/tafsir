@@ -1,0 +1,16 @@
+version: "3.8"
+services:
+  postgres_alone:
+    image: postgres:14.2
+    environment:
+      POSTGRES_PASSWORD: Yatathakar123!
+      POSTGRES_USER: qj
+      POSTGRES_DB: tafsir
+      PGDATA: pgdata
+    volumes:
+      - ./pgdata:/var/lib/postgresql/qj:z
+      - ./tafsir.sql:/docker-entrypoint-initdb.d/tafsir.sql:z
+    ports:
+      - "5435:5432"
+    networks:
+      - default
